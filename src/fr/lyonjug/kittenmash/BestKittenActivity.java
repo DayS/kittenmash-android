@@ -7,10 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 
 public class BestKittenActivity extends Activity {
 
+	private static final int FIGHT_REQUEST_CODE = 1;
 	private int[] kittenResIds;
+	private ImageView catImageView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +28,8 @@ public class BestKittenActivity extends Activity {
 				fight();
 			}
 		});
+
+		catImageView = (ImageView) findViewById(R.id.catImageView);
 
 		kittenResIds = new int[] { R.drawable.kitten_0, //
 				R.drawable.kitten_1, //
@@ -50,6 +55,15 @@ public class BestKittenActivity extends Activity {
 		intent.putExtra(KittenFightActivity.KITTEN1_EXTRA, kitten1);
 		intent.putExtra(KittenFightActivity.KITTEN2_EXTRA, kitten2);
 
-		startActivity(intent);
+		startActivityForResult(intent, FIGHT_REQUEST_CODE);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == FIGHT_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+				catImageView.setImageResource(data.getIntExtra(KittenFightActivity.WIN_EXTRA, R.drawable.kitten_0));
+			}
+		}
 	}
 }

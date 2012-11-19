@@ -3,10 +3,13 @@ package fr.lyonjug.kittenmash;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 public class KittenFightActivity extends Activity {
 
+	public static final String WIN_EXTRA = "win";
 	public static final String KITTEN2_EXTRA = "kitten2";
 	public static final String KITTEN1_EXTRA = "kitten1";
 	private int kitten1;
@@ -28,6 +31,36 @@ public class KittenFightActivity extends Activity {
 
 		cat1ImageView.setImageResource(kitten1);
 		cat2ImageView.setImageResource(kitten2);
+
+		cat1ImageView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				cat1ImageViewClicked();
+			}
+		});
+
+		cat2ImageView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				cat2ImageViewClicked();
+			}
+		});
+	}
+
+	protected void cat1ImageViewClicked() {
+		Intent data = new Intent();
+		data.putExtra(WIN_EXTRA, kitten1);
+		setResult(RESULT_OK, data);
+		finish();
+	}
+
+	protected void cat2ImageViewClicked() {
+		Intent data = new Intent();
+		data.putExtra(WIN_EXTRA, kitten2);
+		setResult(RESULT_OK, data);
+		finish();
 	}
 
 }
