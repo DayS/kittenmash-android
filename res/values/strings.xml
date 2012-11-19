@@ -4,5 +4,7 @@
     <string name="app_name">KittenMash</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    <string name="fight">Fight!</string>
+    <string name="cat_description">The winning cat</string>
 
 </resources>
