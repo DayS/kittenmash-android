@@ -2,56 +2,40 @@ package fr.lyonjug.kittenmash;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
+import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.ViewById;
 
-@EActivity
+@EActivity(R.layout.activity_kitten_fight)
 public class KittenFightActivity extends Activity {
 
 	public static final String WIN_EXTRA = "win";
 	public static final String KITTEN2_EXTRA = "kitten2";
 	public static final String KITTEN1_EXTRA = "kitten1";
-	private int kitten1;
-	private int kitten2;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	@Extra(KITTEN1_EXTRA)
+	int kitten1;
 
-		Intent intent = getIntent();
+	@Extra(KITTEN2_EXTRA)
+	int kitten2;
 
-		kitten1 = intent.getIntExtra(KITTEN1_EXTRA, R.drawable.kitten_0);
-		kitten2 = intent.getIntExtra(KITTEN2_EXTRA, R.drawable.kitten_0);
+	@ViewById
+	ImageView cat1ImageView;
 
-		setContentView(R.layout.activity_kitten_fight);
+	@ViewById
+	ImageView cat2ImageView;
 
-		ImageView cat1ImageView = (ImageView) findViewById(R.id.cat1ImageView);
-		ImageView cat2ImageView = (ImageView) findViewById(R.id.cat2ImageView);
-
+	@AfterViews
+	void afterViews() {
 		cat1ImageView.setImageResource(kitten1);
 		cat2ImageView.setImageResource(kitten2);
-
-		cat1ImageView.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				cat1ImageViewClicked();
-			}
-		});
-
-		cat2ImageView.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				cat2ImageViewClicked();
-			}
-		});
 	}
 
+	@Click
 	protected void cat1ImageViewClicked() {
 		Intent data = new Intent();
 		data.putExtra(WIN_EXTRA, kitten1);
@@ -59,6 +43,7 @@ public class KittenFightActivity extends Activity {
 		finish();
 	}
 
+	@Click
 	protected void cat2ImageViewClicked() {
 		Intent data = new Intent();
 		data.putExtra(WIN_EXTRA, kitten2);
