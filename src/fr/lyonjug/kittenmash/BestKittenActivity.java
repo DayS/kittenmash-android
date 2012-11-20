@@ -46,16 +46,14 @@ public class BestKittenActivity extends Activity {
 
 	@Click(R.id.fightButton)
 	protected void fight() {
-		Intent intent = new Intent(this, KittenFightActivity_.class);
-
 		Random random = new Random();
 		int kitten1 = kittenResIds[random.nextInt(kittenResIds.length)];
 		int kitten2 = kittenResIds[random.nextInt(kittenResIds.length)];
 
-		intent.putExtra(KittenFightActivity.KITTEN1_EXTRA, kitten1);
-		intent.putExtra(KittenFightActivity.KITTEN2_EXTRA, kitten2);
-
-		startActivityForResult(intent, FIGHT_REQUEST_CODE);
+		KittenFightActivity_.intent(this) //
+				.kitten1(kitten1) //
+				.kitten2(kitten2) //
+				.startForResult(FIGHT_REQUEST_CODE);
 	}
 
 	@OnActivityResult(FIGHT_REQUEST_CODE)
