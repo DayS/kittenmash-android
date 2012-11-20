@@ -3,15 +3,17 @@ package fr.lyonjug.kittenmash;
 import java.util.Random;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.widget.ImageView;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.OnActivityResult;
+import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 
 @EActivity(R.layout.activity_best_kitten)
 public class BestKittenActivity extends Activity {
@@ -21,6 +23,9 @@ public class BestKittenActivity extends Activity {
 
 	@ViewById
 	ImageView catImageView;
+
+	@Pref
+	KittenPrefs_ kittenPrefs;
 
 	@AfterViews
 	void afterViews() {
@@ -53,47 +58,29 @@ public class BestKittenActivity extends Activity {
 		startActivityForResult(intent, FIGHT_REQUEST_CODE);
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == FIGHT_REQUEST_CODE) {
-			if (resultCode == RESULT_OK) {
-				int winExtra = data.getIntExtra(KittenFightActivity.WIN_EXTRA,
-						R.drawable.kitten_0);
-				saveWinningCat(winExtra);
-				catImageView.setImageResource(winExtra);
-			}
+	@OnActivityResult(FIGHT_REQUEST_CODE)
+	protected void onActivityResult(int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			int winExtra = data.getIntExtra(KittenFightActivity.WIN_EXTRA,
+					R.drawable.kitten_0);
+			saveWinningCat(winExtra);
+			catImageView.setImageResource(winExtra);
 		}
 	}
 
-	private void saveWinningCat(final int winningCat) {
-		new Thread() {
-			@Override
-			public void run() {
-				SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
-				preferences.edit().putInt("catResId", winningCat).commit();
-			};
-		}.start();
+	@Background
+	void saveWinningCat(final int winningCat) {
+		kittenPrefs.edit().winningCat().put(winningCat).apply();
 	}
 
-	private void loadWinningCat() {
-		new Thread() {
-			@Override
-			public void run() {
-				SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
-				int winningCat = preferences.getInt("catResId",
-						R.drawable.kitten_0);
-				updateWinningCat(winningCat);
-			};
-		}.start();
+	@Background
+	void loadWinningCat() {
+		int winningCat = kittenPrefs.winningCat().get();
+		updateWinningCat(winningCat);
 	}
 
-	protected void updateWinningCat(final int winningCat) {
-		runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				catImageView.setImageResource(winningCat);
-			}
-		});
+	@UiThread
+	void updateWinningCat(final int winningCat) {
+		catImageView.setImageResource(winningCat);
 	}
 }
