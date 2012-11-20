@@ -6,36 +6,24 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
+import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.ViewById;
 
-@EActivity
+@EActivity(R.layout.activity_best_kitten)
 public class BestKittenActivity extends Activity {
 
 	private static final int FIGHT_REQUEST_CODE = 1;
 	private int[] kittenResIds;
-	private ImageView catImageView;
- 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_best_kitten);
+	@ViewById
+	ImageView catImageView;
 
-		findViewById(R.id.fightButton).setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				fight();
-			}
-		});
-
-		catImageView = (ImageView) findViewById(R.id.catImageView);
-
+	@AfterViews
+	void afterViews() {
 		kittenResIds = new int[] { R.drawable.kitten_0, //
 				R.drawable.kitten_1, //
 				R.drawable.kitten_2, //
@@ -49,9 +37,9 @@ public class BestKittenActivity extends Activity {
 		};
 
 		loadWinningCat();
-
 	}
 
+	@Click(R.id.fightButton)
 	protected void fight() {
 		Intent intent = new Intent(this, KittenFightActivity_.class);
 
@@ -69,7 +57,8 @@ public class BestKittenActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == FIGHT_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				int winExtra = data.getIntExtra(KittenFightActivity.WIN_EXTRA, R.drawable.kitten_0);
+				int winExtra = data.getIntExtra(KittenFightActivity.WIN_EXTRA,
+						R.drawable.kitten_0);
 				saveWinningCat(winExtra);
 				catImageView.setImageResource(winExtra);
 			}
@@ -91,7 +80,8 @@ public class BestKittenActivity extends Activity {
 			@Override
 			public void run() {
 				SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
-				int winningCat = preferences.getInt("catResId", R.drawable.kitten_0);
+				int winningCat = preferences.getInt("catResId",
+						R.drawable.kitten_0);
 				updateWinningCat(winningCat);
 			};
 		}.start();
