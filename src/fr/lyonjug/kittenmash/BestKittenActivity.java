@@ -11,12 +11,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
+import com.googlecode.androidannotations.annotations.EActivity;
+
+@EActivity
 public class BestKittenActivity extends Activity {
 
 	private static final int FIGHT_REQUEST_CODE = 1;
 	private int[] kittenResIds;
 	private ImageView catImageView;
-
+ 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,7 +53,7 @@ public class BestKittenActivity extends Activity {
 	}
 
 	protected void fight() {
-		Intent intent = new Intent(this, KittenFightActivity.class);
+		Intent intent = new Intent(this, KittenFightActivity_.class);
 
 		Random random = new Random();
 		int kitten1 = kittenResIds[random.nextInt(kittenResIds.length)];

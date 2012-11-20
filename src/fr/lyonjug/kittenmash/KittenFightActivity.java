@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
+import com.googlecode.androidannotations.annotations.EActivity;
+
+@EActivity
 public class KittenFightActivity extends Activity {
 
 	public static final String WIN_EXTRA = "win";
